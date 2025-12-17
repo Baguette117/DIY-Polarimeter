@@ -7,11 +7,11 @@
 
 #define DEBUG
 
-#define LDR_PIN A0
+#define LDR_PIN A3
 #define SERVO_PIN 11
-#define CALIBRATE_PIN A1
-#define TEST_PIN A2
-#define CYCLE_PIN A3
+#define CALIBRATE_PIN A0
+#define TEST_PIN A1
+#define CYCLE_PIN A2
 
 #define STEPS_TO_DEGREES 360 / 16384  // 16384 steps in 1 revolution (4096 steps per revolution of the stepper motor, 1:4 gear ratio)
 
@@ -252,6 +252,7 @@ void setup() {
 
   selected_diode = laser_diode_0;
   servo.write(selected_diode.pos);
+  digitalWrite(selected_diode.pin, HIGH);
 
   lcd.setCursor(0, 0);
   lcd.print("Laser 0:");
@@ -264,11 +265,13 @@ void loop() {
 
   while (true) {
     if (!digitalRead(CYCLE_PIN)) {  // Cycles through laser diodes
+      Serial.println("PRESSED");
+      Serial.println(selected_diode.id);
       if (!cycle_latch) {
         lcd.clear();
 
         switch (selected_diode.id) {
-          case 0:
+          case 4:
             selected_diode = laser_diode_0;
             digitalWrite(laser_diode_4.pin, LOW);
             digitalWrite(laser_diode_0.pin, HIGH);
@@ -276,7 +279,7 @@ void loop() {
             lcd.print("Laser 0:");
             break;
 
-          case 1:
+          case 0:
             selected_diode = laser_diode_1;
             digitalWrite(laser_diode_0.pin, LOW);
             digitalWrite(laser_diode_1.pin, HIGH);
@@ -284,7 +287,7 @@ void loop() {
             lcd.print("Laser 1:");
             break;
 
-          case 2:
+          case 1:
             selected_diode = laser_diode_2;
             digitalWrite(laser_diode_1.pin, LOW);
             digitalWrite(laser_diode_2.pin, HIGH);
@@ -292,7 +295,7 @@ void loop() {
             lcd.print("Laser 2:");
             break;
 
-          case 3:
+          case 2:
             selected_diode = laser_diode_3;
             digitalWrite(laser_diode_2.pin, LOW);
             digitalWrite(laser_diode_3.pin, HIGH);
@@ -300,7 +303,7 @@ void loop() {
             lcd.print("Laser 3:");
             break;
 
-          case 4:
+          case 3:
             selected_diode = laser_diode_4;
             digitalWrite(laser_diode_3.pin, LOW);
             digitalWrite(laser_diode_4.pin, HIGH);
